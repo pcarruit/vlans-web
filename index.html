@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VLANs en Xarxa: Enrutament pas a pas amb Packet Tracer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>VLANs en Xarxa</h1>
+  <p>Enrutament pas a pas amb Packet Tracer</p>
+  <nav>
+    <ul>
+      <li><a href="#inici">Inici</a></li>
+      <li><a href="#teoria">Teoria VLANs</a></li>
+      <li><a href="#enrutament">Enrutament Inter-VLAN</a></li>
+      <li><a href="#activitat">Activitat</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+      <li><a href="#recursos">Recursos</a></li>
+      <li><a href="#contacte">Contacte</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+
+  <section id="inici">
+    <h2>Benvinguts al mòdul de Xarxes Locals</h2>
+    <img src="fitxers/lan_virtual.png" alt="Esquema de xarxa amb VLANs">
+    <p>En aquesta unitat aprendrem com es comuniquen ordinadors que pertanyen a VLANs diferents dins d'una mateixa xarxa. Farem servir Packet Tracer per practicar la configuració real d'un router i un switch.</p>
+    <p><strong>Objectius d'aprenentatge:</strong></p>
+    <ul>
+      <li>Entendre què és una VLAN i per què se segmenten les xarxes.</li>
+      <li>Comprendre el funcionament del trunking 802.1Q.</li>
+      <li>Configurar un Router-on-a-Stick a Packet Tracer.</li>
+      <li>Diferenciar entre enrutament amb router extern i amb switch de capa 3.</li>
+    </ul>
+  </section>
+
+  <section id="teoria">
+    <h2>Què és una VLAN?</h2>
+    <p>Una VLAN (Virtual Local Area Network) és una xarxa lògica que agrupa dispositius encara que estiguin connectats a switches físics diferents. Permet segmentar el trànsit, millorar la seguretat i reduir dominis de broadcast.</p>
+    <ul>
+      <li><strong>VLAN de dades:</strong> per al trànsit normal dels usuaris.</li>
+      <li><strong>VLAN de veu:</strong> per a telefonia IP.</li>
+      <li><strong>VLAN de gestió:</strong> per administrar els equips de xarxa.</li>
+      <li><strong>VLAN nativa:</strong> trànsit sense etiquetar en un enllaç trunk.</li>
+    </ul>
+    <p>Quan dues VLANs diferents han de comunicar-se, necessiten un dispositiu de capa 3 (router o switch multicapa) perquè els switches normals només treballen a nivell de capa 2.</p>
+  </section>
+
+  <section id="enrutament">
+    <h2>Enrutament Inter-VLAN</h2>
+    <p>Hi ha dues formes principals de fer enrutament entre VLANs:</p>
+    <table>
+      <tr>
+        <th>Mètode</th>
+        <th>Descripció</th>
+        <th>Ús habitual</th>
+      </tr>
+      <tr>
+        <td>Router-on-a-Stick</td>
+        <td>Un únic enllaç físic (trunk) entre el switch i el router, amb subinterfícies virtuals per a cada VLAN</td>
+        <td>Xarxes petites o de laboratori</td>
+      </tr>
+      <tr>
+        <td>Switch de Capa 3 (SVI)</td>
+        <td>El propi switch fa d'enrutador mitjançant interfícies virtuals (SVI) per a cada VLAN</td>
+        <td>Xarxes empresarials més grans</td>
+      </tr>
+    </table>
+    <img src="fitxers/router_on_stick.png" alt="Esquema Router-on-a-Stick">
+  </section>
+
+  <section id="activitat">
+    <h2>Activitat: Configura un Router-on-a-Stick</h2>
+    <p>Segueix aquests passos al teu propi fitxer Packet Tracer:</p>
+    <ol>
+      <li>Crea dues VLANs al switch (per exemple VLAN 10 i VLAN 20).</li>
+      <li>Assigna els ports d'accés corresponents a cada VLAN.</li>
+      <li>Configura el port cap al router com a trunk (<code>switchport mode trunk</code>).</li>
+      <li>Al router, crea dues subinterfícies (per exemple <code>g0/0.10</code> i <code>g0/0.20</code>).</li>
+      <li>Assigna a cada subinterfície l'encapsulació <code>dot1Q</code> corresponent i una adreça IP de la seva xarxa.</li>
+      <li>Configura les IP dels PC amb la porta d'enllaç corresponent a cada subinterfície.</li>
+      <li>Comprova la connectivitat amb <code>ping</code> entre PCs de VLANs diferents.</li>
+    </ol>
+    <button onclick="mostrarPista()">Necessito una pista</button>
+    <p id="pista"></p>
+  </section>
+
+  <section id="quiz">
+    <h2>Quiz ràpid d'autoavaluació</h2>
+    <div class="pregunta">
+      <p>1. Quin protocol s'utilitza per etiquetar el trànsit en un enllaç trunk?</p>
+      <button onclick="respondre(this, true, 'Correcte! És l\'estàndard 802.1Q.')">802.1Q</button>
+      <button onclick="respondre(this, false, 'Incorrecte. VTP serveix per gestionar VLANs, no per etiquetar trames.')">VTP</button>
+      <button onclick="respondre(this, false, 'Incorrecte. STP evita bucles, no etiqueta trànsit.')">STP</button>
+    </div>
+    <div class="pregunta">
+      <p>2. En un Router-on-a-Stick, quantes interfícies físiques necessita el router com a mínim?</p>
+      <button onclick="respondre(this, true, 'Correcte! Amb una sola interfície física i subinterfícies n\'hi ha prou.')">Una</button>
+      <button onclick="respondre(this, false, 'Incorrecte. No cal una interfície per VLAN gràcies a les subinterfícies.')">Una per VLAN</button>
+      <button onclick="respondre(this, false, 'Incorrecte. Amb dues ja seria un disseny diferent.')">Dues</button>
+    </div>
+  </section>
+
+  <section id="recursos">
+    <h2>Recursos</h2>
+    <ul>
+      <li><a href="https://www.netacad.com/" target="_blank">Cisco Networking Academy - NetAcad</a></li>
+      <li><a href="https://www.cisco.com/c/en/us/support/docs/lan-switching/vtp/10558-21.html" target="_blank">Documentació oficial de VLANs (Cisco)</a></li>
+      <li><a href="fitxers/practica_inicial.pkt" download>Descarrega el fitxer base de Packet Tracer</a></li>
+    </ul>
+  </section>
+
+  <section id="contacte">
+    <h2>Contacte / Reflexió</h2>
+    <form onsubmit="enviarReflexio(event)">
+      <label for="reflexio">Escriu què has après avui:</label><br>
+      <textarea id="reflexio" rows="4" cols="50"></textarea><br>
+      <button type="submit">Enviar reflexió</button>
+    </form>
+    <p id="missatgeReflexio"></p>
+  </section>
+
+</main>
+
+<footer>
+  <p>Mòdul 0225 - Xarxes Locals | Cicle Formatiu de Grau Mitjà SMX</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
